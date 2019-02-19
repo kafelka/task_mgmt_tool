@@ -34,7 +34,15 @@ def api_add_task():
 
 @app.route("/deleteTask/<int:taskId>", methods=["DELETE"])
 def api_delete_task(taskId):
-    return "todo"
+    conn = get_db()
+    delete_task(conn, id)
+    return 200 #success
+
+
+@app.route('/updateTask/<int:taskId>', methods=["PUT"])
+def api_update_task(taskId):
+    conn = get_db()
+#    update_task()
 
 
 @app.route("/allTasks", methods=["GET"])
