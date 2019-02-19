@@ -45,24 +45,24 @@ def get_all_tasks(conn):
     
 
 # get_tasks_for_date(conn, date)
-#def get_tasks_for_date(conn, date):
-#    c = conn.cursor()
-#    c.execute(('SELECT * FROM task_management WHERE date=?'), (date,))
-#    columns = ["id", "name", "description", "status", "important", "date"]
-#    result = [dict(zip(columns, row)) for row in c.fetchall()]
-#    print(result)
-#    c.close()
-#    return result
+def get_tasks_for_date(conn, date):
+    c = conn.cursor()
+    c.execute(('SELECT * FROM task_management WHERE date=?'), (date,))
+    columns = ["id", "name", "description", "status", "important", "date"]
+    result = [dict(zip(columns, row)) for row in c.fetchall()]
+    print(result)
+    c.close()
+    return result
 
 # get_tasks_between_dates(conn, from_date, to_date)
-#def get_tasks_between_date(conn, from_date, to_date):
-#    c = conn.cursor()
-#    c.execute(('SELECT * FROM task_management WHERE date BETWEEN date=? AND date=?'),(from_date, to_date,))
-#    columns = ["id", "name", "description", "status", "important", "date"]
-#    result = [dict(zip(columns, row)) for row in c.fetchall()]
-#    print(result)
-#    c.close()
-#    return result
+def get_tasks_between_date(conn, from_date, to_date):
+    c = conn.cursor()
+    c.execute(('SELECT * FROM task_management WHERE date BETWEEN date=? AND date=?'),(from_date, to_date,))
+    columns = ["id", "name", "description", "status", "important", "date"]
+    result = [dict(zip(columns, row)) for row in c.fetchall()]
+    print(result)
+    c.close()
+    return result
 
 
 if __name__ == "__main__":

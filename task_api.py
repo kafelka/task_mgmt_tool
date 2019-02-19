@@ -39,10 +39,17 @@ def api_delete_task(taskId):
     return 200 #success
 
 
+
 @app.route('/updateTask/<int:taskId>', methods=["PUT"])
 def api_update_task(taskId):
+    content = request.json
     conn = get_db()
-#    update_task()
+    name = content.get("name", None)
+    description = content.get("description", None)
+    status = content.get("status", None)
+    important = content.get("important", None)
+    date = content.get("date", None) #to do: validate date format yyyy-mm-dd
+    update_task(conn, name, description, status, important, date)
 
 
 @app.route("/allTasks", methods=["GET"])
