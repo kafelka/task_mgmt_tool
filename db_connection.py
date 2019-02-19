@@ -3,7 +3,7 @@ import sqlite3
 
 def create_table(conn):
     c = conn.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS task_management(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, status TEXT, important TEXT, date TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS task_management(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, status TEXT, important BOOLEAN, date TEXT)")
     conn.commit()
     c.close()
     
@@ -63,6 +63,16 @@ def get_tasks_between_dates(conn, from_date, to_date):
 #    print(result)
     c.close()
     return result
+
+def get_task_by_id(conn, id):
+    c = conn.cursor()
+    c.execute(('SELECT * FROM task_management WHERE id=?'),(id,))
+    columns = ["id", "name", "description", "status", "important", "date"]
+    result = [dict(zip(columns, row)) for row in c.fetchall()]
+#    print(result)
+    c.close()
+    return result
+
 
 
 if __name__ == "__main__":

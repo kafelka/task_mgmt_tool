@@ -35,64 +35,35 @@
 
 
   <div id="main">
-    <table>
-      <tr>
-        <th>name</th>
-        <th>description</th>
-        <th>status</th>
-        <th>important</th>
-        <th>date</th>
-        <th>edit</th>
-        <th>delete</th>
-      </tr>
 
-      {% for task in tasks %}
-      <tr>
-        <td>{{task.name}}</td>
-        <td>{{task.description}}</td>
-        <td>{{task.status}}</td>
-        <td>{{task.important}}</td>
-        <td>{{task.date}}</td>
-
-        <td><a href="{{ url_for("api_get_task_by_id", taskId=task.id) }}">edit</a></td>
-        <td>
-          <form id="delete-{{task.id}}" method="POST" action="{{ url_for("api_delete_task", taskId=task.id) }}">
-            <button id="submit-{{task.id}}" type="submit" class="btn btn-danger">Delete</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-
-    </table>
-
-    <form id="form_1" class="form-inline" method="POST" action="/addTask">
+    <form id="form_1" class="form-inline" method="POST" action="{{ url_for("api_update_task", taskId=task.id) }}">
       <div class="form-group">
         <label>Name</label>
-        <input id="task_title" name="task_title" type="text" class="form-control"  placeholder="Enter task title">
+        <input id="task_title" name="task_title" type="text" class="form-control"  placeholder="Enter task title" value="{{task.name}}">
       </div>
 
       <div class="form-group">
         <label>Description</label>
-        <input id="task_description" name="task_description" type="text" class="form-control"  placeholder="Enter task description" >
+        <input id="task_description" name="task_description" type="text" class="form-control"  placeholder="Enter task description" value="{{task.description}}">
       </div>
 
       <div class="form-group">
         <label>status</label>
-        <select id="task_status" name="task_status" class="form-control"  placeholder="Enter task status">
-          <option value="New">New</option>
-          <option value="In progress">In progress</option>
-          <option value="Completed">Completed</option>
+        <select id="task_status" name="task_status" class="form-control"  placeholder="Enter task status" >
+          <option value="New" {% if task.status == "New" %} selected {% endif %}>New</option>
+          <option value="In progress" {% if task.status == "In progress" %} selected {% endif %}>In progress</option>
+          <option value="Completed" {% if task.status == "Completed" %} selected {% endif %}>Completed</option>
         </select>
       </div>
 
       <div class="form-group">
         <label>Important</label>
-        <input id="task_important" name="task_important" type="checkbox" class="form-control"  value="True">
+        <input id="task_important" name="task_important" type="checkbox" class="form-control"  value="True" {% if task.important == "True" %} checked {% endif %}>
       </div>
 
       <div class="form-group">
         <label>Date</label>
-        <input id="task_date" name="task_date" type="date" min="2015-01-01" max="2025-12-31" class="form-control"  placeholder="Enter task title">
+        <input id="task_date" name="task_date" type="date" min="2015-01-01" max="2025-12-31" class="form-control"  placeholder="Enter task title" value="{{task.date}}">
       </div>
 
       <button id="submit_button" type="submit" class="btn btn-primary">Submit</button>

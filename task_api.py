@@ -1,6 +1,6 @@
 import sqlite3
-from db_connection import add_task, delete_task, update_task, get_all_tasks, get_tasks_for_date, get_tasks_between_dates
-from flask import Flask, request, jsonify, g, render_template, redirect, abort
+from db_connection import add_task, delete_task, update_task, get_all_tasks, get_tasks_for_date, get_tasks_between_dates, get_task_by_id
+from flask import Flask, request, g, render_template, redirect, abort, url_for
 app = Flask(__name__)
 
 def get_db(): #from Flask documentation
@@ -23,10 +23,12 @@ def api_add_task():
    description = request.form.get("task_description", None)
    status = request.form.get("task_status", None)
    important = request.form.get("task_important", False)
+   if important != "True":
+       important = "False"
    date = request.form.get("task_date", None) #to do: validate date format yyyy-mm-dd
-   if None not in [name, description, status, important, date]:
+   if "" not in [name, description, status, important, date]:
        add_task(conn, name, description, status, important, date)
-       return redirect("http://127.0.0.1:5000/", code=201) #http status: created
+       return redirect(url_for("api_get_all_tasks"))
    else:
        return abort(400) #bad request
 
@@ -35,23 +37,32 @@ def api_add_task():
 def api_delete_task(taskId):
     conn = get_db()
     delete_task(conn, taskId)
-    return api_get_all_tasks()  #success
+    return redirect(url_for("api_get_all_tasks"))  #success
 
 
 
-@app.route('/updateTask/<int:taskId>', methods=["PUT"])
+@app.route('/updateTask/<int:taskId>', methods=["POST"])
 def api_update_task(taskId):
     conn = get_db()
     name = request.form.get("task_title", None)
     description = request.form.get("task_description", None)
     status = request.form.get("task_status", None)
-    important = request.form.get("task_important", None)
+    important = request.form.get("task_important", False)
+    if important != "True":
+        important = "False"
     date = request.form.get("task_date", None) #to do: validate date format yyyy-mm-dd
-    if None not in [name, description, status, important, date]:
+    if "" not in [name, description, status, important, date]:
         update_task(conn, taskId, name, description, status, important, date)
-        return redirect("http://127.0.0.1:5000/", code=200)  #success
+        return redirect(url_for("api_get_all_tasks"))
     else:
         return abort(400) #bad request
+
+@app.route("/editTask/<int:taskId>", methods=["GET"])
+def api_get_task_by_id(taskId):
+    conn = get_db()
+    result = get_task_by_id(conn, taskId)
+#    return jsonify(result)
+    return render_template("edit.html", task=result[0])
 
 
 @app.route("/", methods=["GET"])

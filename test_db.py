@@ -1,5 +1,5 @@
 import sqlite3
-from db_connection import add_task, delete_task, update_task, get_all_tasks, get_tasks_for_date, get_tasks_between_dates
+from db_connection import add_task, delete_task, update_task, get_all_tasks, get_tasks_for_date, get_tasks_between_dates, get_task_by_id
 
 db = sqlite3.connect("task_management.db")
 
@@ -17,3 +17,6 @@ print("### printing tasks between dates###")
 tasks_between = get_tasks_between_dates(db, "2017-01-01", "2019-01-01")
 for task in tasks_between:
     print(task)
+    
+id = get_task_by_id(db, 1)
+print(id)
