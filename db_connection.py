@@ -19,7 +19,7 @@ def add_task(conn, name, description, status, important, date):
 
 def delete_task(conn, id):
     c = conn.cursor()
-    c.execute(('DELETE FROM task_management WHERE name = ?'), (id,))
+    c.execute('DELETE FROM task_management WHERE id = ?', (id,))
     conn.commit()
     c.close()
     
@@ -39,7 +39,7 @@ def get_all_tasks(conn):
     c.execute('SELECT id, name, description, status, important, date FROM task_management')
     columns = ["id", "name", "description", "status", "important", "date"]
     result = [dict(zip(columns, row)) for row in c.fetchall()] #combines two lists into a list of tuples
-    print(result)
+#    print(result)
     c.close()
     return result
     
@@ -50,17 +50,17 @@ def get_tasks_for_date(conn, date):
     c.execute(('SELECT * FROM task_management WHERE date=?'), (date,))
     columns = ["id", "name", "description", "status", "important", "date"]
     result = [dict(zip(columns, row)) for row in c.fetchall()]
-    print(result)
+#    print(result)
     c.close()
     return result
 
 # get_tasks_between_dates(conn, from_date, to_date)
-def get_tasks_between_date(conn, from_date, to_date):
+def get_tasks_between_dates(conn, from_date, to_date):
     c = conn.cursor()
-    c.execute(('SELECT * FROM task_management WHERE date BETWEEN date=? AND date=?'),(from_date, to_date,))
+    c.execute(('SELECT * FROM task_management WHERE date BETWEEN ? AND ?'),(from_date, to_date,))
     columns = ["id", "name", "description", "status", "important", "date"]
     result = [dict(zip(columns, row)) for row in c.fetchall()]
-    print(result)
+#    print(result)
     c.close()
     return result
 

@@ -1,6 +1,6 @@
 import sqlite3
-from db_connection import add_task, delete_task, update_task, get_all_tasks
-from flask import Flask, request, jsonify, g
+from db_connection import add_task, delete_task, update_task, get_all_tasks, get_tasks_for_date, get_tasks_between_dates
+from flask import Flask, request, jsonify, g, render_template, redirect, abort
 app = Flask(__name__)
 
 def get_db(): #from Flask documentation
@@ -18,48 +18,51 @@ def close_connection(exception):
 
 @app.route("/addTask", methods=["POST"])
 def api_add_task():
-    content = request.json
-    conn = get_db()
-    name = content.get("name", None)
-    description = content.get("description", None)
-    status = content.get("status", None)
-    important = content.get("important", None)
-    date = content.get("date", None) #to do: validate date format yyyy-mm-dd
-    if None not in [name, description, status, important, date]:
-        add_task(conn, name, description, status, important, date)
-        return 201 #http status: created
-    else:
-        return 400 #bad request
+   conn = get_db()
+   name = request.form.get("task_title", None)
+   description = request.form.get("task_description", None)
+   status = request.form.get("task_status", None)
+   important = request.form.get("task_important", False)
+   date = request.form.get("task_date", None) #to do: validate date format yyyy-mm-dd
+   if None not in [name, description, status, important, date]:
+       add_task(conn, name, description, status, important, date)
+       return redirect("http://127.0.0.1:5000/", code=201) #http status: created
+   else:
+       return abort(400) #bad request
 
 
-@app.route("/deleteTask/<int:taskId>", methods=["DELETE"])
+@app.route("/deleteTask/<int:taskId>", methods=["POST"]) #DELETE method DOES NOT WORK!!!!!!!!!!!!!!!!!! wtf?
 def api_delete_task(taskId):
     conn = get_db()
-    delete_task(conn, id)
-    return 200 #success
+    delete_task(conn, taskId)
+    return api_get_all_tasks()  #success
 
 
 
 @app.route('/updateTask/<int:taskId>', methods=["PUT"])
 def api_update_task(taskId):
-    content = request.json
     conn = get_db()
-    name = content.get("name", None)
-    description = content.get("description", None)
-    status = content.get("status", None)
-    important = content.get("important", None)
-    date = content.get("date", None) #to do: validate date format yyyy-mm-dd
-    update_task(conn, name, description, status, important, date)
+    name = request.form.get("task_title", None)
+    description = request.form.get("task_description", None)
+    status = request.form.get("task_status", None)
+    important = request.form.get("task_important", None)
+    date = request.form.get("task_date", None) #to do: validate date format yyyy-mm-dd
+    if None not in [name, description, status, important, date]:
+        update_task(conn, taskId, name, description, status, important, date)
+        return redirect("http://127.0.0.1:5000/", code=200)  #success
+    else:
+        return abort(400) #bad request
 
 
-@app.route("/allTasks", methods=["GET"])
+@app.route("/", methods=["GET"])
 def api_get_all_tasks():
     conn = get_db()
     result = get_all_tasks(conn)
-    return jsonify(result)
+#    return jsonify(result)
+    return render_template("index.html", tasks=result)
 
 
 
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    app.run(debug=True)
