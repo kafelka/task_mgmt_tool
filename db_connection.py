@@ -36,7 +36,7 @@ def update_task(conn, id, name, description, status, important, date):
         
 def get_all_tasks(conn):
     c = conn.cursor()
-    c.execute('SELECT id, name, description, status, important, date FROM task_management')
+    c.execute('SELECT id, name, description, status, important, date FROM task_management ORDER BY date')
     columns = ["id", "name", "description", "status", "important", "date"]
     result = [dict(zip(columns, row)) for row in c.fetchall()] #combines two lists into a list of tuples
 #    print(result)

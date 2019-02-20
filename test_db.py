@@ -9,12 +9,12 @@ for task in all_tasks:
     print(task)
 
 print("### printing one day tasks###")   
-one_day_task = get_tasks_for_date(db, "2017-09-09")
+one_day_task = get_tasks_for_date(db, "2019-02-22")
 for task in one_day_task:
     print(task)
 
 print("### printing tasks between dates###")  
-tasks_between = get_tasks_between_dates(db, "2017-01-01", "2019-01-01")
+tasks_between = get_tasks_between_dates(db, "2019-02-22", "2019-02-24")
 for task in tasks_between:
     print(task)
     

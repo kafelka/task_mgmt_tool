@@ -25,7 +25,7 @@ def api_add_task():
    important = request.form.get("task_important", False)
    if important != "True":
        important = "False"
-   date = request.form.get("task_date", None) #to do: validate date format yyyy-mm-dd
+   date = request.form.get("task_date", None)
    if "" not in [name, description, status, important, date]:
        add_task(conn, name, description, status, important, date)
        return redirect(url_for("api_get_all_tasks"))
@@ -33,11 +33,11 @@ def api_add_task():
        return abort(400) #bad request
 
 
-@app.route("/deleteTask/<int:taskId>", methods=["POST"]) #DELETE method DOES NOT WORK!!!!!!!!!!!!!!!!!! wtf?
+@app.route("/deleteTask/<int:taskId>", methods=["POST"]) #DELETE method DOES NOT WORK!!!!!!!!!
 def api_delete_task(taskId):
     conn = get_db()
     delete_task(conn, taskId)
-    return redirect(url_for("api_get_all_tasks"))  #success
+    return redirect(url_for("api_get_all_tasks"))  
 
 
 
@@ -50,7 +50,7 @@ def api_update_task(taskId):
     important = request.form.get("task_important", False)
     if important != "True":
         important = "False"
-    date = request.form.get("task_date", None) #to do: validate date format yyyy-mm-dd
+    date = request.form.get("task_date", None) 
     if "" not in [name, description, status, important, date]:
         update_task(conn, taskId, name, description, status, important, date)
         return redirect(url_for("api_get_all_tasks"))
@@ -61,7 +61,6 @@ def api_update_task(taskId):
 def api_get_task_by_id(taskId):
     conn = get_db()
     result = get_task_by_id(conn, taskId)
-#    return jsonify(result)
     return render_template("edit.html", task=result[0])
 
 
@@ -69,9 +68,7 @@ def api_get_task_by_id(taskId):
 def api_get_all_tasks():
     conn = get_db()
     result = get_all_tasks(conn)
-#    return jsonify(result)
     return render_template("index.html", tasks=result)
-
 
 
 
